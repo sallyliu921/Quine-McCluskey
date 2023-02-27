@@ -9,12 +9,9 @@
 #include <string>
 #include <stack>
 #include <set>
+#include <map>
 #include <vector>
 #include <cmath>
-
-//definitions
-
-#define Matrix_Int std::vector<int, int>
 
 /// <summary>
 /// utilities class holding independent functions
@@ -46,9 +43,7 @@ public:
 	/// <returns></returns>
 	static bool check_terms(std::string Expression);
 
-	static int unique_literals(std::string Expression);
-
-	static Matrix_Int truth_table_generator(int literals);
+	static std::set<char>* unique_literals(std::string Expression);
 };
 
 

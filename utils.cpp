@@ -69,22 +69,15 @@ int utils::verify_expression_syntax(std::string Expression)
 	return check_characters_within_range(Expression) && check_parentheses(Expression);
 }
 
-int utils::unique_literals(std::string Expression)
+std::set<char>* utils::unique_literals(std::string Expression)
 {
-	std::set<char> UniqueLiterals;
+	std::set<char> *UniqueLiterals = new std::set<char>;
 	for(int i = 0; i < Expression[i]; i++)
 	{
 		if (Expression[i] >= 65 && Expression[i] <= 90)
 		{
-			UniqueLiterals.insert(Expression[i]);
+			UniqueLiterals->insert(Expression[i]);
 		}
 	}
-	return UniqueLiterals.size();
-}
-
-Matrix_Int truth_table_generator(int literals)
-{
-	int ColSize = std::pow(literals, 2);
-	//test commit
-	
+	return UniqueLiterals;
 }

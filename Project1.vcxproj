@@ -140,8 +140,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="truth_table.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="truth_table_node.h" />
+    <ClInclude Include="truth_table.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
