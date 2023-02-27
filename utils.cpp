@@ -85,6 +85,6 @@ int utils::unique_literals(std::string Expression)
 Matrix_Int truth_table_generator(int literals)
 {
 	int ColSize = std::pow(literals, 2);
-
+	//test commit
 	
 }
