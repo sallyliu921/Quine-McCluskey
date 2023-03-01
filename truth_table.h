@@ -1,21 +1,29 @@
 #pragma once
 
-#ifndef TRUTH_TABLE.H
-#define TRUTH_TABLE.H
+#ifndef TRUTH_TABLE_H
+#define TRUTH_TABLE_H
 
 #include "utils.h"
-#include "truth_table_node.h"
+
 
 class truth_table 
 {
 private:
-	truth_table_node Node;
-	int NumberOfUniqueLiterals;
-	std::vector<bool> function;
+	
+	charKeyMatrix truthTableMatrix;
+	int UniqueLiterals;
+	std::vector<std::string>* Function;
 
 public:
 	truth_table();
-	truth_table(std::set<char>* Literals);
+	truth_table(int NUL, normalizedString* function);
+
+	void set_number_of_uliterals(int UL);
+	void set_function(normalizedString* f);
+
+	
+	void build_table();
+	void qm();
 };
 
 

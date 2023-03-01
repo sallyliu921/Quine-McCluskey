@@ -1,17 +1,17 @@
 
 #include "utils.h"
 
-bool utils::check_characters_within_range(std::string Expression) 
+bool utils::check_characters_within_range(std::string* Expression) 
 {
-	for (int i = 0; i < Expression.length(); i++)
+	for (int i = 0; i < Expression->length(); i++)
 	{
 		//if expression char isnt: within uppercase ASCII Latin block A..Z, integers 0, 1 
 		//and is not equal to ( ) ' + \n
-		if ((Expression[i] < 65 || Expression[i] > 90)
-			&& Expression[i] != '0' && Expression[i] != '1'
-			&& Expression[i] != '(' && Expression[i] != ')'
-			&& Expression[i] != '\'' && Expression[i] != ' ' 
-			&& Expression[i] != '+' && Expression[i] != '\n')
+		if (((*Expression)[i] < 65 || (*Expression)[i] > 90)
+			&& (*Expression)[i] != '0' && (*Expression)[i] != '1'
+			&& (*Expression)[i] != '(' && (*Expression)[i] != ')'
+			&& (*Expression)[i] != '\'' && (*Expression)[i] != ' ' 
+			&& (*Expression)[i] != '+' && (*Expression)[i] != '\n')
 		{
 			std::cout << "invalid Syntax";
 			return false;
@@ -19,28 +19,28 @@ bool utils::check_characters_within_range(std::string Expression)
 	}
 }
 
-bool utils::check_parentheses(std::string Expression)
+bool utils::check_parentheses(std::string* Expression)
 {
 	std::stack<char> ParenthesesStack;
 
-	for (int i = 0; i < Expression.length(); i++)
+	for (int i = 0; i < Expression->length(); i++)
 	{
-		//checks for empty parentheses ()
-		if (i != Expression.length() && Expression[i] == '(' && Expression[i + 1] == ')')
+		//checks for empty parentheses () or open parenthesis followed by ' +
+		if (i != Expression->length() && (*Expression)[i] == '(' && ((*Expression)[i + 1] == ')' || (*Expression)[i + 1] == '\''|| (*Expression)[i + 1] == '+'))
 		{
 			return false;
 		}
 
-		//checkas for valid parentheses
-		if (Expression[i] == '(')
+		//checks for valid parentheses
+		if ((*Expression)[i] == '(')
 		{
 			ParenthesesStack.push('(');
 		}
-		else if (ParenthesesStack.empty() && Expression[i] == ')')
+		else if (ParenthesesStack.empty() && (*Expression)[i] == ')')
 		{
 			return false;
 		}
-		else if(Expression[i] == ')')
+		else if((*Expression)[i] == ')')
 		{
 			ParenthesesStack.pop();
 		}
@@ -54,29 +54,19 @@ bool utils::check_parentheses(std::string Expression)
 	return true;
 }
 
-bool utils::check_terms(std::string Expression) 
-{
-	for (int i = 0; i < Expression[i]; i++)
-	{
-		
-	}
-
-	return true;
-}
-
-int utils::verify_expression_syntax(std::string Expression)
+int utils::verify_expression_syntax(std::string* Expression)
 {
 	return check_characters_within_range(Expression) && check_parentheses(Expression);
 }
 
-std::set<char>* utils::unique_literals(std::string Expression)
+std::set<char>* utils::unique_literals(std::string* Expression)
 {
 	std::set<char> *UniqueLiterals = new std::set<char>;
-	for(int i = 0; i < Expression[i]; i++)
+	for(int i = 0; i < (*Expression)[i]; i++)
 	{
-		if (Expression[i] >= 65 && Expression[i] <= 90)
+		if ((*Expression)[i] >= 65 && (*Expression)[i] <= 90)
 		{
-			UniqueLiterals->insert(Expression[i]);
+			UniqueLiterals->insert((*Expression)[i]);
 		}
 	}
 	return UniqueLiterals;

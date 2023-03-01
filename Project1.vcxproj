@@ -145,7 +145,6 @@
     <ClCompile Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="truth_table_node.h" />
     <ClInclude Include="truth_table.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

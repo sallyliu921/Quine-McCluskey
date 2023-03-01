@@ -1,5 +1,6 @@
 
-
+#define normalizedString std::vector<std::string>
+#define charKeyMatrix std::map<char, std::vector<int>*>
 
 #ifndef UTILS_H
 #define UTILS_H
@@ -19,31 +20,29 @@
 class utils
 {
 public:
-	static int verify_expression_syntax(std::string Expression);
+	static int verify_expression_syntax(std::string* Expression);
 
 	/// <summary>
 	/// checks if string characters are within correct ASCII codes
 	/// </summary>
 	/// <param name="Expression">Expression given from user</param>
 	/// <returns>boolean</returns>
-	static bool check_characters_within_range(std::string Expression);
+	static bool check_characters_within_range(std::string* Expression);
 
 	/// <summary>
 	/// checks open and empty parentheses 
 	/// </summary>
 	/// <param name="Expression">Expression given from user</param>
 	/// <returns>boolean</returns>
-	static bool check_parentheses(std::string Expression);
+	static bool check_parentheses(std::string* Expression);
 
-	/// <summary>
-	/// iterates through expressions and checks for invalid terms such as (''') ()' ('
-	/// checks if beginning of expression is valid eg; doesn't begin with '
-	/// </summary>
-	/// <param name="Expression"></param>
-	/// <returns></returns>
-	static bool check_terms(std::string Expression);
 
-	static std::set<char>* unique_literals(std::string Expression);
+
+	static std::set<char>* unique_literals(std::string* Expression);
+
+	static std::string simplify_expression(std::string* Expression);
+
+	static normalizedString* normalize_string(std::string* Expression);
 };
 
 
