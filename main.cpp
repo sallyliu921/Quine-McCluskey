@@ -16,5 +16,14 @@ int main()
 		std::cout << *it;
 	}
 
+	normalizedString* ns = utils::parse_string(s);
+
+	for (auto it = ns->begin(); it != ns->end(); it++)
+	{
+		std::cout << "\n" << *it;
+	}
+
+
+
 	return 0;
 }

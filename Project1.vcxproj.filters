@@ -24,12 +24,12 @@
     <ClCompile Include="utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="truth_table.cpp">
+    <ClCompile Include="truthTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="truth_table.h">
+    <ClInclude Include="truthTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

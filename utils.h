@@ -1,11 +1,13 @@
 
-#define normalizedString std::vector<std::string>
+
 #define charKeyMatrix std::map<char, std::vector<int>*>
+#define normalizedString std::vector<std::string>
 
 #ifndef UTILS_H
 #define UTILS_H
 
 #include <iostream>
+#include <sstream>
 #include <iomanip>
 #include <string>
 #include <stack>
@@ -20,6 +22,14 @@
 class utils
 {
 public:
+
+	///checkers///
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Expression"></param>
+	/// <returns></returns>
 	static int verify_expression_syntax(std::string* Expression);
 
 	/// <summary>
@@ -36,13 +46,19 @@ public:
 	/// <returns>boolean</returns>
 	static bool check_parentheses(std::string* Expression);
 
+	///misc utilities///
 
+	static std::string* decimal_to_bin(int dec);
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Expression"></param>
+	/// <returns></returns>
 	static std::set<char>* unique_literals(std::string* Expression);
 
-	static std::string simplify_expression(std::string* Expression);
+	static normalizedString* parse_string(std::string* Expression);
 
-	static normalizedString* normalize_string(std::string* Expression);
 };
 
 
