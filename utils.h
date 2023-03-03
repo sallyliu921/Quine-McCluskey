@@ -48,7 +48,7 @@ public:
 
 	///misc utilities///
 
-	static std::string* decimal_to_bin(int dec);
+	static std::string* decimal_to_binary(int Dec, int Bits);
 
 	/// <summary>
 	/// 

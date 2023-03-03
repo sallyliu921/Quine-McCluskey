@@ -59,30 +59,37 @@ int utils::verify_expression_syntax(std::string* Expression)
 	return check_characters_within_range(Expression) && check_parentheses(Expression);
 }
 
-std::string* utils::decimal_to_bin(int dec)
+std::string* utils::decimal_to_binary(int Dec, int Bits)
 {
-	std::string* bin = new std::string;
+	std::string* Bin = new std::string;
 	
-	for (int i = 0; dec > 0; i++)
+	for (int i = 0; Dec > 0; i++)
 	{
-		*bin += std::to_string(dec % 2);
-		dec /= 2;
+		*Bin = std::to_string(Dec % 2) + *Bin;
+		Dec /= 2;
 	}
 
-	return bin;
+	int temp = (*Bin).length();
+
+	for (int i = 0; i < Bits - temp; i++)
+	{
+		*Bin = '0' + *Bin;
+	}
+
+	return Bin;
 }
 
 std::set<char>* utils::unique_literals(std::string* Expression)
 {
-	std::set<char> *UniqueLiterals = new std::set<char>;
+	std::set<char> *_uniqueLiterals = new std::set<char>;
 	for(int i = 0; i < Expression->length(); i++)
 	{
 		if ((*Expression)[i] >= 65 && (*Expression)[i] <= 90)
 		{
-			UniqueLiterals->insert((*Expression)[i]);
+			_uniqueLiterals->insert((*Expression)[i]);
 		}
 	}
-	return UniqueLiterals;
+	return _uniqueLiterals;
 }
 
 normalizedString* utils::parse_string(std::string* Expression) //simple parser for minterms (for now), for any Boolean expression we'd need a infix to RND parser
