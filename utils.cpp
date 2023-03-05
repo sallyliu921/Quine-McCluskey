@@ -115,3 +115,24 @@ normalizedString* utils::parse_string(std::string* Expression) //simple parser f
 
 	return RetStr;
 }
+
+int utils::minterm_to_binary(std::string Minterm)
+{
+	int x = 0;
+	for (int i = 0; i < Minterm.size(); i++)
+	{
+		x <<= 1; //shifting bit to its correct position 
+
+		if (i != Minterm.size() && Minterm[i + 1] != '\'')
+		{
+			x |= 1; //setting LSB bit
+
+		}
+		else
+		{
+			i++;
+		}
+	}
+
+	return x;
+}
