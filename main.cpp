@@ -24,13 +24,14 @@ int main()
 	//	std::cout << "\n" << *it;
 	//}
 
-	std::set<char>* Uls = new std::set<char>({'A', 'B', 'C', 'F'});
+	std::set<char>* Uls = new std::set<char>({'A', 'B'});
 	normalizedString* f = new normalizedString({});
 
 	truthTable T1(Uls, f);
 
-	T1.build_table();
+	T1.build_char_table();
 	T1.print_table();
+	T1.qm();
 
 
 	return 0;
