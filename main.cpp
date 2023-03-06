@@ -33,12 +33,12 @@ int main()
 	T1.print_table();
 	T1.qm();
 
-	printf("minterm test:\n");
+	//printf("minterm test:\n");
 
-	std::string s;
-	std::cin >> s;
+	//std::string s;
+	//std::cin >> s;
 
-	std::cout << *utils::decimal_to_binary(utils::minterm_to_binary(s), 4);
+	//std::cout << *utils::decimal_to_binary(utils::minterm_to_binary(s), 4);
 
 
 	return 0;

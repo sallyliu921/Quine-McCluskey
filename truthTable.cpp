@@ -6,6 +6,7 @@ truthTable::truthTable()
 	_truthTableMatrix = {};
 	_uniqueLiterals = NULL;
 	_function = NULL;
+	_functionBinary = NULL;
 	_simplifiedFunction = NULL;
 
 }
@@ -15,6 +16,7 @@ truthTable::truthTable(std::set<char>* Uls, normalizedString* F)
 	_truthTableMatrix = {};
 	_uniqueLiterals = Uls;
 	_function = F;
+	_functionBinary = NULL;
 	_simplifiedFunction = NULL;
 }
 
@@ -104,11 +106,41 @@ int truthTable::bit_difference(int A, int B)
 	return count;
 }
 
+coveredBool* truthTable::group_minterms_by_ones()
+{
+	return NULL;
+}
+
+coveredBool	truthTable::combine_minterms()
+{
+	return {0,0};
+}
+
+coveredBool* truthTable::group_primes()
+{
+	return NULL;
+}
+
+int truthTable::coveredBool_bit_difference(coveredBool A, coveredBool B)
+{
+	if (A.coverIndexes == B.coverIndexes)
+	{
+		A.value |= 1 << A.coverIndexes;
+		B.value |= 1 << B.coverIndexes; //sets bit in index to 1 so bit values are equalized on dashes
+		
+		return bit_difference(A.value, B.value); //equalized values are then compared normally
+	}
+
+	return 0;
+}
+
 void truthTable::qm()
 {
-	for (int i = 0; i < std::pow(2, _uniqueLiterals->size()); i++)
-	{
-		
-	}
+
+	std::cout << coveredBool_bit_difference({ 0b11000, 0b00010 }, { 0b11110, 0b00010 });
+	//for (int i = 0; i < std::pow(2, _uniqueLiterals->size()); i++)
+	//{
+	//	
+	//}
 }
 
