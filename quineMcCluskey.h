@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef TRUTHTABLE_H
-#define TRUTHTABLE_H
+#ifndef QUINEMCCLUSKEY_H
+#define QUINEMCCLUSKEY_H
 
 #include "utils.h"
 
@@ -9,21 +9,24 @@ typedef struct coveredBool
 {
 	int value;
 	int coverIndexes; //each bit acts as a flag for its corresponding dashed (covered) bit in value
+	bool isCovered;
 };
 
-class truthTable 
+class quineMcCluskey 
 {
 private:
 	charKeyMatrix _truthTableMatrix; //for printing
+	
 
 	std::set<char>* _uniqueLiterals;
+
 	normalizedString* _function;
-	int* _functionBinary; //function representation as minterm in binary
+	std::vector<int>* _functionBinary; //function representation as minterm in binary
 	normalizedString* _simplifiedFunction;
 
 public:
-	truthTable();
-	truthTable(std::set<char>* _uniqueLiterals, normalizedString* function);
+	quineMcCluskey();
+	quineMcCluskey(std::set<char>* _uniqueLiterals, normalizedString* function);
 
 	void set_uliterals(std::set<char>* Uls);
 	void set_function(normalizedString* f);
@@ -33,9 +36,9 @@ public:
 
 	///Qm methods///
 
-	coveredBool*	group_minterms_by_ones();
-	coveredBool		combine_minterms();
-	coveredBool*	group_primes();
+	coveredBool	combine_minterms();
+	std::vector<std::vector<coveredBool>>	group_minterms_by_bits();
+	std::vector<std::vector<coveredBool>>	group_primes();
 	int coveredBool_bit_difference(coveredBool A, coveredBool B);
 
 	int bit_difference(int A, int B); 

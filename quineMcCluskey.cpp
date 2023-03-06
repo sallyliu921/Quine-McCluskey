@@ -1,7 +1,7 @@
 ﻿
-#include "truthTable.h"
+#include "quineMcCluskey.h"
 
-truthTable::truthTable() 
+quineMcCluskey::quineMcCluskey() 
 {
 	_truthTableMatrix = {};
 	_uniqueLiterals = NULL;
@@ -11,26 +11,35 @@ truthTable::truthTable()
 
 }
 
-truthTable::truthTable(std::set<char>* Uls, normalizedString* F)
+quineMcCluskey::quineMcCluskey(std::set<char>* Uls, normalizedString* F)
 {
 	_truthTableMatrix = {};
 	_uniqueLiterals = Uls;
 	_function = F;
-	_functionBinary = NULL;
+	_functionBinary = {};
 	_simplifiedFunction = NULL;
 }
 
-void truthTable::set_uliterals(std::set<char>* Uls)
+void quineMcCluskey::set_uliterals(std::set<char>* Uls)
 {
 	_uniqueLiterals = Uls;
 }
 
-void truthTable::set_function(normalizedString* F)
+void quineMcCluskey::set_function(normalizedString* F)
 {
 	_function = F;
+	_functionBinary = new std::vector<int>;
+	//_functionBinary->resize(_uniqueLiterals->size());
+
+	for (auto it = _function->begin(); it != _function->end(); it++)
+	{
+		_functionBinary->push_back(utils::minterm_to_binary(*it));
+
+	}
+	
 }
 
-void truthTable::build_char_table()
+void quineMcCluskey::build_char_table()
 {
 	int j = 0;
 
@@ -56,7 +65,7 @@ void truthTable::build_char_table()
 	}
 }
 
-void truthTable::print_table()
+void quineMcCluskey::print_table()
 {
 	for (int i = 0; i < _uniqueLiterals->size() * 4; i++)
 	{
@@ -89,7 +98,7 @@ void truthTable::print_table()
 	}
 }
 
-int truthTable::bit_difference(int A, int B)
+int quineMcCluskey::bit_difference(int A, int B)
 {
 	int count = 0;
 	for (int i = 0; i < 32; i++) //since int is a 32-bit number we are shifting 32 bits to compare them
@@ -106,41 +115,45 @@ int truthTable::bit_difference(int A, int B)
 	return count;
 }
 
-coveredBool* truthTable::group_minterms_by_ones()
+std::vector<std::vector<coveredBool>> quineMcCluskey::group_minterms_by_bits()
 {
-	return NULL;
+	int Temp = -1;
+	std::vector<std::vector<coveredBool>> ReturnMatrix(_uniqueLiterals->size());
+
+	for (auto it = _functionBinary->begin(); it != _functionBinary->end(); it++)
+	{
+		Temp = utils::count_bits(*it);
+		ReturnMatrix[Temp - 1].push_back({*it, 0, 0});
+	}
+
+	return ReturnMatrix;
 }
 
-coveredBool	truthTable::combine_minterms()
+coveredBool	quineMcCluskey::combine_minterms()
 {
 	return {0,0};
 }
 
-coveredBool* truthTable::group_primes()
+std::vector<std::vector<coveredBool>> quineMcCluskey::group_primes()
 {
-	return NULL;
+	return {};
 }
 
-int truthTable::coveredBool_bit_difference(coveredBool A, coveredBool B)
+int quineMcCluskey::coveredBool_bit_difference(coveredBool A, coveredBool B)
 {
 	if (A.coverIndexes == B.coverIndexes)
 	{
 		A.value |= 1 << A.coverIndexes;
-		B.value |= 1 << B.coverIndexes; //sets bit in index to 1 so bit values are equalized on dashes
+		B.value |= 1 << B.coverIndexes; //sets bits in value according to the index so they are equalized on dashes
 		
-		return bit_difference(A.value, B.value); //equalized values are then compared normally
+		return bit_difference(A.value, B.value); //dash equalized values are then compared normally to check for difference between other bits
 	}
 
 	return 0;
 }
 
-void truthTable::qm()
+void quineMcCluskey::qm()
 {
-
-	std::cout << coveredBool_bit_difference({ 0b11000, 0b00010 }, { 0b11110, 0b00010 });
-	//for (int i = 0; i < std::pow(2, _uniqueLiterals->size()); i++)
-	//{
-	//	
-	//}
+	std::vector<std::vector<coveredBool>> a = group_minterms_by_bits();
 }
 

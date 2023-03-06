@@ -51,8 +51,8 @@ public:
 	///misc utilities///
 
 	static std::string* decimal_to_binary(int Dec, int Bits);
-
 	static int minterm_to_binary(std::string Minterm);
+	static int count_bits(int x);
 
 	/// <summary>
 	/// 

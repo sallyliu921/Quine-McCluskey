@@ -136,3 +136,17 @@ int utils::minterm_to_binary(std::string Minterm)
 
 	return x;
 }
+
+int utils::count_bits(int x)
+{
+	int count = 0;
+	for (int i = 0; i < 32; i++)
+	{
+		if (x & 1 << i) //checking LSB positions from 0 to 32th bit
+		{
+			count++;
+		}
+	}
+
+	return count;
+}
