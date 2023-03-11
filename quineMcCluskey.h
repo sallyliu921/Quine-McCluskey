@@ -36,9 +36,9 @@ public:
 
 	///Qm methods///
 
-	coveredBool	combine_minterms();
 	std::vector<std::vector<coveredBool>>	group_minterms_by_bits();
 	std::vector<std::vector<coveredBool>>	group_primes();
+	coveredBool	combine_minterms(coveredBool A, coveredBool B);
 	int coveredBool_bit_difference(coveredBool A, coveredBool B);
 
 	int bit_difference(int A, int B); 

@@ -15,8 +15,7 @@ quineMcCluskey::quineMcCluskey(std::set<char>* Uls, normalizedString* F)
 {
 	_truthTableMatrix = {};
 	_uniqueLiterals = Uls;
-	_function = F;
-	_functionBinary = {};
+	set_function(F); //to set _functionBinary automatically
 	_simplifiedFunction = NULL;
 }
 
@@ -29,14 +28,12 @@ void quineMcCluskey::set_function(normalizedString* F)
 {
 	_function = F;
 	_functionBinary = new std::vector<int>;
-	//_functionBinary->resize(_uniqueLiterals->size());
 
 	for (auto it = _function->begin(); it != _function->end(); it++)
 	{
 		_functionBinary->push_back(utils::minterm_to_binary(*it));
 
 	}
-	
 }
 
 void quineMcCluskey::build_char_table()
@@ -129,9 +126,23 @@ std::vector<std::vector<coveredBool>> quineMcCluskey::group_minterms_by_bits()
 	return ReturnMatrix;
 }
 
-coveredBool	quineMcCluskey::combine_minterms()
+coveredBool	quineMcCluskey::combine_minterms(coveredBool A, coveredBool B)
 {
-	return {0,0};
+	coveredBool combinedMinterm = A;
+
+	for (int i = 0; i < 32; i++) //looping over 32 bit int, i represents number of bits we shift
+	{
+		if ((A.value >> i & 1) != (B.value >> i & 1))
+		{
+			combinedMinterm.coverIndexes >>= i; //shifts different bit to LSB postion
+			combinedMinterm.coverIndexes |= 1; //sets the bit
+			combinedMinterm.coverIndexes <<= i; //shifts it back to its original position
+
+			break; //breaks since function is exclusively called for 1 bit difference
+		}
+	}
+
+	return combinedMinterm;
 }
 
 std::vector<std::vector<coveredBool>> quineMcCluskey::group_primes()
@@ -149,11 +160,11 @@ int quineMcCluskey::coveredBool_bit_difference(coveredBool A, coveredBool B)
 		return bit_difference(A.value, B.value); //dash equalized values are then compared normally to check for difference between other bits
 	}
 
-	return 0;
+	return -1;
 }
 
 void quineMcCluskey::qm()
 {
-	std::vector<std::vector<coveredBool>> a = group_minterms_by_bits();
+	coveredBool x = combine_minterms({0b00100,0b01000}, {0b00000, 0b01000});
 }
 
