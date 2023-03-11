@@ -15,7 +15,7 @@ int main()
 	*s = "ABCD+A'BCD+A'B'CD+A'B'C'D";
 	normalizedString* a = utils::parse_string(s);
 	T1.set_function(a);
-	T1.qm();
+	T1.start();
 
 	return 0;
 }

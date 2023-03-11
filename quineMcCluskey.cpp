@@ -163,8 +163,8 @@ int quineMcCluskey::coveredBool_bit_difference(coveredBool A, coveredBool B)
 	return -1;
 }
 
-void quineMcCluskey::qm()
+void quineMcCluskey::start()
 {
-	coveredBool x = combine_minterms({0b00100,0b01000}, {0b00000, 0b01000});
+	coveredBool x = combine_minterms({0b000011,0b010000}, {0b000111, 0b010000});
 }
 

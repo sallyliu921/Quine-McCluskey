@@ -101,7 +101,6 @@ normalizedString* utils::parse_string(std::string* Expression) //simple parser f
 	{
 		if ((*Expression)[i] != ' ')
 			temp += (*Expression)[i];
-		
 	}
 
 	*Expression = temp;
@@ -121,16 +120,15 @@ int utils::minterm_to_binary(std::string Minterm)
 	int x = 0;
 	for (int i = 0; i < Minterm.size(); i++)
 	{
-		x <<= 1; //shifting bit to its correct position 
+		x <<= 1; //shifting bit to its correct bit position depending on i 
 
-		if (i != Minterm.size() && Minterm[i + 1] != '\'')
+		if (i != Minterm.size() && Minterm[i + 1] != '\'') //skips not operators
 		{
 			x |= 1; //setting LSB bit
-
 		}
 		else
 		{
-			i++;
+			i++; //part of skipping not op
 		}
 	}
 
@@ -140,7 +138,7 @@ int utils::minterm_to_binary(std::string Minterm)
 int utils::count_bits(int x)
 {
 	int count = 0;
-	for (int i = 0; i < 32; i++)
+	for (int i = 0; i < 32; i++) //looping on default 32 bit integer type
 	{
 		if (x & 1 << i) //checking LSB positions from 0 to 32th bit
 		{
