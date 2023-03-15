@@ -147,7 +147,45 @@ coveredBool	quineMcCluskey::combine_minterms(coveredBool A, coveredBool B)
 
 std::vector<std::vector<coveredBool>> quineMcCluskey::group_primes()
 {
-	return {};
+	std::vector<std::vector<coveredBool>> mintermGroups = group_minterms_by_bits();
+	std::vector<std::vector<coveredBool>> primeImplicants(_uniqueLiterals->size() - 1);
+
+	for (int i = 0; i < mintermGroups.size() - 1; i++)
+	{
+		for (int j = 0; j < mintermGroups[i].size(); j++)
+		{
+			for (int k = 0; k < mintermGroups[i + 1].size(); k++)
+			{
+				int difference = coveredBool_bit_difference(mintermGroups[i][j], mintermGroups[i + 1][k]);
+
+				if (difference == 1)
+				{
+					coveredBool combinedMinterm = combine_minterms(mintermGroups[i][j], mintermGroups[i + 1][k]);
+
+					bool isDuplicate = false;
+
+					for (auto it = primeImplicants[i].begin(); it != primeImplicants[i].end(); it++)
+					{
+						if (it->value == combinedMinterm.value && it->coverIndexes == combinedMinterm.coverIndexes)
+						{
+							isDuplicate = true;
+							break;
+						}
+					}
+
+					if (!isDuplicate)
+					{
+						primeImplicants[i].push_back(combinedMinterm);
+					}
+
+					mintermGroups[i][j].isCovered = true;
+					mintermGroups[i + 1][k].isCovered = true;
+				}
+			}
+		}
+	}
+
+	return primeImplicants;
 }
 
 int quineMcCluskey::coveredBool_bit_difference(coveredBool A, coveredBool B)
