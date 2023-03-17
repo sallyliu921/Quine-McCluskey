@@ -16,7 +16,7 @@
 #include <vector>
 #include <cmath>
 #include <stdio.h>
-
+#include <bitset>
 
 /// <summary>
 /// utilities class holding independent functions

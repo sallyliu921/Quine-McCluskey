@@ -43,6 +43,7 @@ void quineMcCluskey::build_char_table()
 	for (auto it = _uniqueLiterals->begin(); it != _uniqueLiterals->end(); it++) //iterating on literals into map
 	{
 		_truthTableMatrix[*it] = new std::vector<int>({});
+		_truthTableMatrix['f'] = new std::vector<int>({});
 	}
 
 	std::string* TempStr = new std::string;
@@ -56,10 +57,23 @@ void quineMcCluskey::build_char_table()
 			int x = (*TempStr)[j] - '0';
 			_truthTableMatrix[*it]->push_back(x);
 			j++;
+			std::cout << *it;
 		}
-		
+		std::cout << "test";
+		(*_truthTableMatrix['f']).push_back(0);
 		j = 0;
 	}
+
+	for (int i = 0; i < std::pow(2, _uniqueLiterals->size()); i++)
+	{
+		for (auto r : (*_functionBinary))
+		{
+			std::bitset<32> bits(r);
+			int _index = bits.to_ulong();
+			_truthTableMatrix['f']->at(_index) = 1;
+		}
+	}
+
 }
 
 void quineMcCluskey::print_table()
@@ -75,10 +89,10 @@ void quineMcCluskey::print_table()
 	{
 		std::cout << std::right << std::setw(2) << *it << std::setw(2) << "|";
 	}
-
+	std::cout << std::right << std::setw(2) << 'f' << std::setw(2) << "|";
 	std::cout << "\n";
 
-	for (int i = 0; i < _uniqueLiterals->size()*4; i++)
+	for (int i = 0; i < _uniqueLiterals->size()*4+4; i++)
 	{
 		std::cout << std::right << "―";
 	}
@@ -90,7 +104,8 @@ void quineMcCluskey::print_table()
 		for (auto it = _uniqueLiterals->begin(); it != _uniqueLiterals->end(); it++)
 		{
 			std::cout << std::right << std::setw(2) << (*(_truthTableMatrix[*it]))[i] << std::setw(2) << "|";
-		}																								
+		}
+		std::cout << std::right << std::setw(2) << (*(_truthTableMatrix['f']))[i] << std::setw(2) << "|";
 		std::cout << "\n";
 	}
 }
