@@ -43,12 +43,14 @@ int main()
     for (int i = 0; i < primeImplicants.size(); i++)
     {
         std::cout << "Prime implicants with " << i << " bits: ";
-        for (int j = 0; j < primeImplicants[i].size(); j++)
+        for (auto it = primeImplicants[i].begin(); it != primeImplicants[i].end(); it++)
         {
-            std::cout << primeImplicants[i][j].value << " "<< primeImplicants[i][j].coverIndexes<<" ,";
+            std::cout << *coveredBool::coveredBool_to_binary(*it, 4) << "  ";
         }
         std::cout << std::endl;
     }
+
+
     qm.start();
 
     return 0;

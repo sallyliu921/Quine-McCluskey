@@ -145,6 +145,7 @@
     <ClCompile Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="coveredBool.h" />
     <ClInclude Include="quineMcCluskey.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

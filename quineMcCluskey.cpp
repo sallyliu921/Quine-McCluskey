@@ -156,9 +156,7 @@ coveredBool	quineMcCluskey::combine_minterms(coveredBool A, coveredBool B)
 	{
 		if ((A.value >> i & 1) != (B.value >> i & 1))
 		{
-			combinedMinterm.coverIndexes >>= i; //shifts different bit to LSB postion
-			combinedMinterm.coverIndexes |= 1; //sets the bit
-			combinedMinterm.coverIndexes <<= i; //shifts it back to its original position
+			combinedMinterm.coverIndexes |= 1 << i; //sets bit at which bit difference is at
 
 			break; //breaks since function is exclusively called for 1 bit difference
 		}
@@ -170,7 +168,6 @@ coveredBool	quineMcCluskey::combine_minterms(coveredBool A, coveredBool B)
 std::vector<std::vector<coveredBool>> quineMcCluskey::group_primes(std::vector<std::vector<coveredBool>> mintermGroups)
 {
 	std::vector<std::vector<coveredBool>> primeImplicants(_uniqueLiterals->size());
-
 
 	for (int i = 0; i < mintermGroups.size() - 1; i++)
 	{
@@ -227,7 +224,28 @@ int quineMcCluskey::coveredBool_bit_difference(coveredBool A, coveredBool B)
 
 void quineMcCluskey::start()
 {
-	coveredBool x = combine_minterms({0b000011,0b010000}, {0b000111, 0b010000});
+
+	combine_minterms({ 0b0000, 0b0100, 0 }, { 0b1000, 0b0100, 0 });
+
+	std::vector<std::vector<std::vector<coveredBool>>> columnArray;
+	columnArray.push_back(group_minterms_by_bits());
+
+	for (int i = 0; i < _uniqueLiterals->size() - 1; i++)
+	{
+		columnArray.push_back(group_primes(columnArray[i]));
+	}
 	
+	for (int i = 0; i < _uniqueLiterals->size() - 1; i++) //cols
+	{
+		for (auto j : columnArray[i]) //groups
+		{
+			for (auto k : j) //minterms
+			{
+				std::cout << k.value << "," << *coveredBool::coveredBool_to_binary(k, _uniqueLiterals->size()) << "  ";
+			}
+			std::cout << "\n";
+		}
+		std::cout << "\n\n\n\n";
+	}
 }
 

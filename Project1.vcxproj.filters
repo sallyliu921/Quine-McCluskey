@@ -32,5 +32,8 @@
     <ClInclude Include="quineMcCluskey.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="coveredBool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
