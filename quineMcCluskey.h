@@ -41,7 +41,7 @@ public:
 	
 	void set_uliterals(std::set<char>* Uls);
 	void set_function(normalizedString* f);
-
+	void set_function(std::vector<int> minterms);
 	/// <summary>
 	/// builds truthtable, used after expression is given from user 
 	/// </summary>
@@ -63,7 +63,7 @@ public:
 	/// groups prime implicants, is iterated upon by start();
 	/// </summary>
 	/// <returns>vector of coveredBool type</returns>
-	std::vector<std::vector<coveredBool>>	group_primes();
+	std::vector<std::vector<coveredBool>> group_primes(std::vector<std::vector<coveredBool>> mintermGroups);
 
 	/// <summary>
 	/// combines minterms together, is used in group_primes();

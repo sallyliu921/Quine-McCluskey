@@ -35,6 +35,14 @@ void quineMcCluskey::set_function(normalizedString* F)
 
 	}
 }
+void quineMcCluskey::set_function(std::vector<int> minterms)
+{
+	_functionBinary = new std::vector<int>;
+	for (auto it = minterms.begin(); it != minterms.end(); it++)
+	{
+		_functionBinary->push_back(*it);
+	}
+}
 
 void quineMcCluskey::build_char_table()
 {
@@ -59,7 +67,6 @@ void quineMcCluskey::build_char_table()
 			j++;
 			std::cout << *it;
 		}
-		std::cout << "test";
 		(*_truthTableMatrix['f']).push_back(0);
 		j = 0;
 	}
@@ -130,12 +137,12 @@ int quineMcCluskey::bit_difference(int A, int B)
 std::vector<std::vector<coveredBool>> quineMcCluskey::group_minterms_by_bits()
 {
 	int Temp = -1;
-	std::vector<std::vector<coveredBool>> ReturnMatrix(_uniqueLiterals->size());
+	std::vector<std::vector<coveredBool>> ReturnMatrix(_uniqueLiterals->size()+1);
 
 	for (auto it = _functionBinary->begin(); it != _functionBinary->end(); it++)
 	{
 		Temp = utils::count_bits(*it);
-		ReturnMatrix[Temp - 1].push_back({*it, 0, 0});
+		ReturnMatrix[Temp].push_back({*it, 0, 0});
 	}
 
 	return ReturnMatrix;
@@ -160,10 +167,10 @@ coveredBool	quineMcCluskey::combine_minterms(coveredBool A, coveredBool B)
 	return combinedMinterm;
 }
 
-std::vector<std::vector<coveredBool>> quineMcCluskey::group_primes()
+std::vector<std::vector<coveredBool>> quineMcCluskey::group_primes(std::vector<std::vector<coveredBool>> mintermGroups)
 {
-	std::vector<std::vector<coveredBool>> mintermGroups = group_minterms_by_bits();
-	std::vector<std::vector<coveredBool>> primeImplicants(_uniqueLiterals->size() - 1);
+	std::vector<std::vector<coveredBool>> primeImplicants(_uniqueLiterals->size());
+
 
 	for (int i = 0; i < mintermGroups.size() - 1; i++)
 	{
@@ -205,7 +212,9 @@ std::vector<std::vector<coveredBool>> quineMcCluskey::group_primes()
 
 int quineMcCluskey::coveredBool_bit_difference(coveredBool A, coveredBool B)
 {
-	if (A.coverIndexes == B.coverIndexes)
+	if (A.coverIndexes == 0) {
+		return bit_difference(A.value, B.value);
+	}else if (A.coverIndexes == B.coverIndexes)
 	{
 		A.value |= 1 << A.coverIndexes;
 		B.value |= 1 << B.coverIndexes; //sets bits in value according to the index so they are equalized on dashes
@@ -219,5 +228,6 @@ int quineMcCluskey::coveredBool_bit_difference(coveredBool A, coveredBool B)
 void quineMcCluskey::start()
 {
 	coveredBool x = combine_minterms({0b000011,0b010000}, {0b000111, 0b010000});
+	
 }
 
