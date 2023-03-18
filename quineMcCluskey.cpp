@@ -1,6 +1,7 @@
 ﻿
 #include "quineMcCluskey.h"
 
+
 quineMcCluskey::quineMcCluskey() 
 {
 	_truthTableMatrix = {};
@@ -183,9 +184,9 @@ coveredBool	quineMcCluskey::combine_minterms(coveredBool A, coveredBool B)
 	return combinedMinterm;
 }
 
-std::vector<std::vector<coveredBool>> quineMcCluskey::group_primes(std::vector<std::vector<coveredBool>>& mintermGroups)
+std::vector<std::vector<coveredBool>> quineMcCluskey::group_implicants(std::vector<std::vector<coveredBool>>& mintermGroups)
 {
-	std::vector<std::vector<coveredBool>> primeImplicants(_uniqueLiterals->size());
+	std::vector<std::vector<coveredBool>> implicants(_uniqueLiterals->size());
 
 	for (int i = 0; i < mintermGroups.size() - 1; i++) //columns
 	{
@@ -201,7 +202,7 @@ std::vector<std::vector<coveredBool>> quineMcCluskey::group_primes(std::vector<s
 
 					bool isDuplicate = false;
 
-					for (auto it = primeImplicants[i].begin(); it != primeImplicants[i].end(); it++)
+					for (auto it = implicants[i].begin(); it != implicants[i].end(); it++)
 					{
 						if (it->value == combinedMinterm.value && it->coverIndexes == combinedMinterm.coverIndexes)
 						{
@@ -212,7 +213,7 @@ std::vector<std::vector<coveredBool>> quineMcCluskey::group_primes(std::vector<s
 
 					if (!isDuplicate)
 					{
-						primeImplicants[i].push_back(combinedMinterm);
+						implicants[i].push_back(combinedMinterm);
 					}
 
 					mintermGroups[i][j].isCombined = true;
@@ -223,7 +224,7 @@ std::vector<std::vector<coveredBool>> quineMcCluskey::group_primes(std::vector<s
 		}
 	}
 
-	return primeImplicants;
+	return implicants;
 }
 
 int quineMcCluskey::coveredBool_bit_difference(coveredBool A, coveredBool B)
@@ -313,9 +314,8 @@ void quineMcCluskey::start()
 
 	for (int i = 0; i < _uniqueLiterals->size() - 1; i++)
 	{
-		columnArray.push_back(group_primes(columnArray[i]));
+		columnArray.push_back(group_implicants(columnArray[i]));
 	}
-
 
 	std::cout << "SoP expression: ";
 
@@ -347,6 +347,7 @@ void quineMcCluskey::start()
 	print_table();
 
 	std::cout << "Prime Implicants: \n";
+	std::vector<coveredBool> primeImplicants; //container to store PIs to set coverChart's PIs
 
 	for (int i = 0; i < _uniqueLiterals->size() - 1; i++) //cols
 	{
@@ -356,11 +357,18 @@ void quineMcCluskey::start()
 			{
 				if (!k.isCombined)
 				{
+					primeImplicants.push_back(k);
 					std::cout << *coveredBool::coveredBool_to_binary(k, _uniqueLiterals->size()) << "\n";
 					std::cout << *coveredBool_to_minterm(k) << "\n\n";
 				}
 			}
 		}
 	}
+
+	std::cout << "Cover Chart: \n";
+	_coverChart.set_primeImplicants(primeImplicants);
+	_coverChart.build_chart(_uniqueLiterals->size());
+	_coverChart.print_chart(_uniqueLiterals->size());
+
 }
 

@@ -5,7 +5,7 @@
 
 #include "utils.h"
 #include "coveredBool.h"
-
+#include "coverChart.h"
 
 class quineMcCluskey 
 {
@@ -16,6 +16,7 @@ private:
 
 	normalizedString* _function;
 	std::vector<int>* _functionBinary; //function representation as minterm in binary
+	coverChart _coverChart;
 	normalizedString* _simplifiedFunction;
 
 public:
@@ -49,7 +50,7 @@ public:
 	/// groups prime implicants, is iterated upon by start();
 	/// </summary>
 	/// <returns>vector of coveredBool type</returns>
-	std::vector<std::vector<coveredBool>> group_primes(std::vector<std::vector<coveredBool>>& mintermGroups);
+	std::vector<std::vector<coveredBool>> group_implicants(std::vector<std::vector<coveredBool>>& mintermGroups);
 
 	/// <summary>
 	/// combines minterms together, is used in group_primes();
