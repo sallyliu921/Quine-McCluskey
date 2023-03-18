@@ -12,7 +12,6 @@ class quineMcCluskey
 private:
 	charKeyMatrix _truthTableMatrix; //for printing
 	
-
 	std::set<char>* _uniqueLiterals;
 
 	normalizedString* _function;
@@ -21,7 +20,8 @@ private:
 
 public:
 	quineMcCluskey();
-	quineMcCluskey(std::set<char>* _uniqueLiterals, normalizedString* function);
+	quineMcCluskey(normalizedString* function);
+	quineMcCluskey(std::set<char>* _uniqueLiterals, std::vector<int>* function); //for quick debugging/testing
 	
 	///setters///
 	
@@ -58,6 +58,17 @@ public:
 	/// <param name="B">minterm B</param>
 	/// <returns>resultant coveredBool</returns>
 	coveredBool	combine_minterms(coveredBool A, coveredBool B);
+
+	///QM utilities///
+
+	std::vector<std::string> get_pos();
+
+	/// <summary>
+	/// for printing, converts binary terms to their minterm equivalent
+	/// </summary>
+	/// <param name="Minterm"></param>
+	/// <returns></returns>
+	std::string* coveredBool_to_minterm(coveredBool cb);
 
 	/// <summary>
 	/// gets the difference bit difference between two coveredBools

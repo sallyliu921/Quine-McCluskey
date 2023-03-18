@@ -27,12 +27,18 @@
     <ClCompile Include="quineMcCluskey.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CoverChart.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="quineMcCluskey.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="coveredBool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="coverChart.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

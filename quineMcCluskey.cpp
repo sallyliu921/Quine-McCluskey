@@ -11,11 +11,19 @@ quineMcCluskey::quineMcCluskey()
 
 }
 
-quineMcCluskey::quineMcCluskey(std::set<char>* Uls, normalizedString* F)
+quineMcCluskey::quineMcCluskey(normalizedString* F)
 {
-	_truthTableMatrix = {};
-	_uniqueLiterals = Uls;
+	_uniqueLiterals = utils::unique_literals(&((*F)[0]));
 	set_function(F); //to set _functionBinary automatically
+	build_char_table();
+	_simplifiedFunction = NULL;
+}
+
+quineMcCluskey::quineMcCluskey(std::set<char>* Uls, std::vector<int>* F)
+{
+	_uniqueLiterals = Uls;
+	_functionBinary = F; //to set _functionBinary automatically
+	build_char_table();
 	_simplifiedFunction = NULL;
 }
 
@@ -35,6 +43,7 @@ void quineMcCluskey::set_function(normalizedString* F)
 
 	}
 }
+
 void quineMcCluskey::set_function(std::vector<int> minterms)
 {
 	_functionBinary = new std::vector<int>;
@@ -56,7 +65,7 @@ void quineMcCluskey::build_char_table()
 
 	std::string* TempStr = new std::string;
 
-	for (int i = 0; i < std::pow(2, _uniqueLiterals->size()); i++)
+	for (int i = 0; i <  2 << _uniqueLiterals->size() - 1; i++)
 	{
 		TempStr = utils::decimal_to_binary(i, _uniqueLiterals->size());
 
@@ -65,13 +74,12 @@ void quineMcCluskey::build_char_table()
 			int x = (*TempStr)[j] - '0';
 			_truthTableMatrix[*it]->push_back(x);
 			j++;
-			std::cout << *it;
 		}
 		(*_truthTableMatrix['f']).push_back(0);
 		j = 0;
 	}
 
-	for (int i = 0; i < std::pow(2, _uniqueLiterals->size()); i++)
+	for (int i = 0; i < 2 << _uniqueLiterals->size() - 1; i++)
 	{
 		for (auto r : (*_functionBinary))
 		{
@@ -85,7 +93,7 @@ void quineMcCluskey::build_char_table()
 
 void quineMcCluskey::print_table()
 {
-	for (int i = 0; i < _uniqueLiterals->size() * 4; i++)
+	for (int i = 0; i < _uniqueLiterals->size() * 4 + 4; i++)
 	{
 		std::cout << std::right << "―";
 	}
@@ -106,7 +114,7 @@ void quineMcCluskey::print_table()
 	
 	std::cout << "\n";
 
-	for (int i = 0; i < std::pow(2, _uniqueLiterals->size()); i++)
+	for (int i = 0; i < 2 << _uniqueLiterals->size() - 1; i++)
 	{
 		for (auto it = _uniqueLiterals->begin(); it != _uniqueLiterals->end(); it++)
 		{
@@ -115,6 +123,13 @@ void quineMcCluskey::print_table()
 		std::cout << std::right << std::setw(2) << (*(_truthTableMatrix['f']))[i] << std::setw(2) << "|";
 		std::cout << "\n";
 	}
+
+	for (int i = 0; i < _uniqueLiterals->size() * 4 + 4; i++)
+	{
+		std::cout << std::right << "―";
+	}
+
+	std::cout << "\n";
 }
 
 int quineMcCluskey::bit_difference(int A, int B)
@@ -222,10 +237,72 @@ int quineMcCluskey::coveredBool_bit_difference(coveredBool A, coveredBool B)
 	return -1;
 }
 
+std::string* quineMcCluskey::coveredBool_to_minterm(coveredBool cb)
+{
+	std::string* s = new std::string;
+	int count = 0;
+
+	for (auto it = _uniqueLiterals->rbegin(); it != _uniqueLiterals->rend(); it++)
+	{
+		if (cb.coverIndexes >> count & 1)
+		{
+			count++;
+			continue;
+		}
+		else if (cb.value >> count & 1)
+		{
+			*s = *it + *s;
+		}
+		else
+		{
+			*s = std::string(1, *it) + std::string(1, '\'') + *s;
+		}
+
+		count++;
+	}
+
+	return s;
+}
+
+std::vector<std::string> quineMcCluskey::get_pos()
+{
+	std::vector<std::string> returnVector = {};
+	std::string temp;
+	int count = 0;
+	for (int i = 0; i < 2 << _uniqueLiterals->size() - 1; i++)
+	{
+		if (!(*_truthTableMatrix['f'])[i])
+		{
+			for (auto it = _uniqueLiterals->begin(); it != _uniqueLiterals->end(); it++)
+			{
+				if ((*_truthTableMatrix[*it])[i] == 0)
+				{
+					temp += std::string(1, *it) + "\'";
+				}
+				else
+				{
+					temp += std::string(1, *it);
+				}
+
+				if (count < _uniqueLiterals->size() - 1)
+				{
+					temp += "+";
+				}
+
+				count++;
+			}
+			returnVector.push_back(temp);
+			count = 0;
+			temp = "";
+		}
+	}
+
+	return returnVector;
+
+}
+
 void quineMcCluskey::start()
 {
-
-	combine_minterms({ 0b0000, 0b0100, 0 }, { 0b1000, 0b0100, 0 });
 
 	std::vector<std::vector<std::vector<coveredBool>>> columnArray;
 	columnArray.push_back(group_minterms_by_bits());
@@ -234,18 +311,52 @@ void quineMcCluskey::start()
 	{
 		columnArray.push_back(group_primes(columnArray[i]));
 	}
-	
+
+
+	std::cout << "SoP expression: ";
+
+	int count = 0;
+
+	for (auto i : *_function)
+	{
+		std::cout << i;
+		if (count != _function->size() - 1)
+		{
+			std::cout << " + ";
+		}
+		count++;
+	}
+
+	std::cout << "\nPos expression: ";
+	for (auto i : get_pos())
+	{
+		std::cout << " (" << i;
+		if (count != _function->size() - 1)
+		{
+			std::cout << ") ";
+		}
+		count++;
+	}
+
+	std::cout << "\n\nTruth table: \n";
+
+	print_table();
+
+	std::cout << "Prime Implicants: \n";
+
 	for (int i = 0; i < _uniqueLiterals->size() - 1; i++) //cols
 	{
 		for (auto j : columnArray[i]) //groups
 		{
 			for (auto k : j) //minterms
 			{
-				std::cout << k.value << "," << *coveredBool::coveredBool_to_binary(k, _uniqueLiterals->size()) << "  ";
+				if (!k.isCovered)
+				{
+					std::cout << *coveredBool::coveredBool_to_binary(k, _uniqueLiterals->size()) << "\n";
+					std::cout << *coveredBool_to_minterm(k) << "\n\n";
+				}
 			}
-			std::cout << "\n";
 		}
-		std::cout << "\n\n\n\n";
 	}
 }
 

@@ -141,11 +141,13 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="quineMcCluskey.cpp" />
+    <ClCompile Include="CoverChart.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="coveredBool.h" />
+    <ClInclude Include="coverChart.h" />
     <ClInclude Include="quineMcCluskey.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

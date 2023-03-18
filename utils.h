@@ -14,9 +14,10 @@
 #include <set>
 #include <map>
 #include <vector>
-#include <cmath>
 #include <stdio.h>
 #include <bitset>
+
+#include "coveredBool.h"
 
 /// <summary>
 /// utilities class holding independent functions

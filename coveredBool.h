@@ -50,6 +50,7 @@ typedef struct coveredBool
 		return s;
 	};
 
+
 };
 
 #endif 
