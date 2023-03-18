@@ -88,6 +88,8 @@ public:
 	/// <returns>vector of string (normalized string)</returns>
 	static normalizedString* parse_string(std::string* Expression);
 
+	static int get_bit_position(int);
+
 };
 
 

@@ -20,6 +20,15 @@ typedef struct coveredBool
 	int coverIndexes; //each bit acts as a flag for its corresponding dashed (covered) bit in value
 	bool isCombined; //flag to check if coveredBool is combined 
 
+	bool operator<(const coveredBool& rhs) const noexcept
+	{
+		return this->value < rhs.value; 
+	}
+
+	bool operator!=(const coveredBool& rhs) const noexcept
+	{
+		return this->coverIndexes != rhs.coverIndexes && this->value != rhs.value;
+	}
 
 	static std::string* coveredBool_to_binary(coveredBool a, int bits)
 	{
@@ -49,6 +58,7 @@ typedef struct coveredBool
 
 		return s;
 	};
+
 
 
 };

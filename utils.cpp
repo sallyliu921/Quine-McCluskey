@@ -148,3 +148,18 @@ int utils::count_bits(int x)
 
 	return count;
 }
+
+int utils::get_bit_position(int x)
+{
+	int index = 0;
+	for (int i = 0; i < 32; i++)
+	{
+		if (x & 1 >> i)
+		{
+			index = i;
+			break;
+		}
+	}
+
+	return index;
+}

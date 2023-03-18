@@ -17,14 +17,16 @@ void coverChart::set_primeImplicants(std::vector<coveredBool> coveredBools)
 
 void coverChart::build_chart(int bits)
 {
+	
 	int primeImplicantIndex = 0;
-	for (int i = 0; i < 2 << bits; i++) //loops on undashed terms
+	for (int i = 0; i < 2 << bits - 1; i++) //loops on undashed terms
 	{
+		_chart[i].resize(2 << bits - 1);
 		for (auto pi : _primeImplicants) //loops on primeimplicants (rows)
 		{
 			if ((pi.value & (~pi.coverIndexes)) == (i & (~pi.coverIndexes))) //bitmasks undashed bits and sees if they are contianed in an implicant
 			{
-				_chart[i] |= 1 << primeImplicantIndex; //sets bit corresponding to the bool value of the coveredBool in chart 
+				(_chart[i])[primeImplicantIndex] = 1; //sets bit corresponding to the bool value of the coveredBool in chart 
 			}
 			primeImplicantIndex++;
 		}
@@ -33,106 +35,105 @@ void coverChart::build_chart(int bits)
 	}
 }
 
-std::vector<coveredBool> coverChart::get_essential_primes() //redesign
+void coverChart::reduce_from_essential_primes(int bits)
 {
-	std::vector<coveredBool> temp;
-	int count = 0;
-	for (auto i : _chart)
+	for (int i = 0; i < _chart.size(); i++)
 	{
-		if (utils::count_bits(i.second) == 1) 
+		int temp = std::count(_chart[i].begin(), _chart[i].end(), 1);
+		if (temp == 1) 
 		{
-			temp.push_back(_primeImplicants[count]);
+			//_essentialPrimes.insert(_primeImplicants[std::find(_chart[i].begin(), _chart[i].end(), 1) - _chart[i].begin()]);
+			_chart[i][std::find(_chart[i].begin(), _chart[i].end(), 1) - _chart[i].begin()] = 0;
 		}
-		count++;
 	}
-
-	return temp;
 }
 
-bool coverChart::reduce_chart(int bits) //redesign
+void coverChart::reduce_chart(int bits)
 {
-	auto temp = _chart;
-	int count = 0;
-	for (auto i : _chart)
-	{
-		if (i.second == 1)
-		{
-			for (auto j : _chart)
-			{
-				j.second &= 0; //clears bits in the rows and columns covered by EPI
-			}
-		}
-		count++;
-	}
-
-	return _chart == temp;
-}
-
-bool coverChart::remove_chart_redundancy(int bits) //redesign
-{
-	bool temp = false;
-
-	for (auto i : _chart) //iterations to check if there is a dominating column to remove
-	{
-		for (auto j : _chart)
-		{
-			temp = i.second & j.second; 
-		}
-		
-		if (!temp)
-		{
-			i.second &= 0; //clears column
-		}
-
-		temp = false;
-	}
-
-	return _chart == _chart;
-}
-
-bool coverChart::three_step_heuristic(int bits)
-{
-	bool temp = 0;
-
 begin:
 
-	if (reduce_chart(bits))
+	int rowBitCount = 0;
+	int maxRowBitCount = 0;
+	int maxIndex = 0;
+	int tempIndex = 0;
+	auto temp = _chart;
+	bool isUnique = false;
+
+	for(int i = 0; i < _primeImplicants.size(); i++)
 	{
-
-		if (remove_chart_redundancy(bits))
+		for (auto j : _chart) //iterates on cols
 		{
-			print_chart(bits);
-			return temp; //returns 0 if its not simplified (no change to chart)
+			for (int k = 0; k < _chart.size(); k++)
+			{
+				if (std::count(_chart[k].begin(), _chart[k].end(), 1) == 1)
+				{
+					print_chart(bits);
+					goto mid;
+				}
+			}
+			if (j.second[i])
+			{
+				rowBitCount++;
+			}
 		}
-		temp = 1;
 
-		goto begin; //if redundancy is resolved repeat the 3 step heuristic again
+		if (rowBitCount > maxRowBitCount)
+		{
+			maxRowBitCount = rowBitCount;
+			maxIndex = i;
+		}
+
+		rowBitCount = 0;
+
+	}
+	_essentialPrimes.insert(_primeImplicants[maxIndex]);
+	isUnique = _essentialPrimes.find(_primeImplicants[maxIndex]) != _essentialPrimes.end();
+
+
+	clear_chart_row(maxIndex, bits); //clears rows
+	print_chart(bits);
+
+	if (isUnique)
+	{
+		print_chart(bits);
+		isUnique = false;
 	}
 
+
+mid:
+	reduce_from_essential_primes(bits);
+
+
+	if (temp != _chart)
+	{
+		goto begin;
+	}
+
+}
+
+void coverChart::clear_chart_row(int index, int bits)
+{
+	for (int i = 0; i <_chart.size(); i++)
+	{
+		_chart[i][index] = 0;
+	}
 
 }
 
 void coverChart::print_chart(int bits)
 {
-	std::vector<int> IncludedMinterms;
-	for(auto i : _chart)
-	{
-		if (i.second > 1)
-		{
-			IncludedMinterms.push_back(i.first);
-		}
-	}
 
-	std::cout << std::right << std::setw(bits * 1.5 + 1) << " | ";
 
-	for (auto i : IncludedMinterms)
+	std::cout << std::right << std::setw(bits * 1.5 + 2) << " | ";
+
+	for (auto i : _chart)
 	{
-		std::cout << i << "  ";
+		std::cout << i.first << "  ";
 	}
 
 	std::cout << "\n";
 
-	for (int i = 0; i < IncludedMinterms.size()*4 + 1; i++)
+	for (int i = 0; i < _chart.size()*4 + 1; i++)
 	{
 		std::cout << "_";
 	}
@@ -142,15 +143,15 @@ void coverChart::print_chart(int bits)
 	for (int i = 0; i < _primeImplicants.size(); i++)
 	{
 		std::cout << *coveredBool::coveredBool_to_binary(_primeImplicants[i], bits) << std::setw(bits * 1.5 - bits) << " | ";
-		for (auto j : IncludedMinterms)
+		for (auto j : _chart)
 		{
-			if (_chart[j] >> i & 1)
+			if (j.second[i] == 1)
 			{
-				std::cout << "X" << std::setw(bits * 1.5 + std::to_string(j).length() - bits);
+				std::cout << "X" << std::setw(bits * 1.5 + std::to_string(j.first).length() - bits);
 			}
 			else
 			{
-				std::cout << " " << std::setw(bits * 1.5 + std::to_string(j).length() - bits);
+				std::cout << " " << std::setw(bits * 1.5 + std::to_string(j.first).length() - bits);
 			}
 		}
 		std::cout << "\n";

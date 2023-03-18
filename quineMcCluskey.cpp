@@ -365,12 +365,35 @@ void quineMcCluskey::start()
 		}
 	}
 
-	std::cout << "Cover Chart: \n\n";
+	std::cout << "Cover Chart Reduction: \n\n";
 	_coverChart.set_primeImplicants(primeImplicants);
 	_coverChart.build_chart(_uniqueLiterals->size());
-	_coverChart.print_chart(_uniqueLiterals->size());
+	_coverChart.reduce_chart(_uniqueLiterals->size());
+	
+	std::cout << "\nEssentials: \n";
+	for (auto i : _coverChart._essentialPrimes)
+	{
+		std::cout << * coveredBool::coveredBool_to_binary(i, _uniqueLiterals->size()) << "\n";
+		std::cout << *coveredBool_to_minterm(i) << "\n\n";
 
-	_coverChart.three_step_heuristic(_uniqueLiterals->size());
+	}
+
+	std::cout << "\nSimplified Expression: ";
+
+	int count2 = 0;
+	for (auto it = _coverChart._essentialPrimes.begin(); it !=_coverChart._essentialPrimes.end(); it++)
+	{
+		count2++;
+		std::cout << *coveredBool_to_minterm(*it);
+		if (count2 == _coverChart._essentialPrimes.size())
+		{
+			break;
+		}
+		else
+			std::cout << " + ";
+	}
 
 }
+
+
 

@@ -88,7 +88,6 @@ public:
 	int bit_difference(int A, int B); 
 	void start(); //big NP boss
 
-
 };
 
 
