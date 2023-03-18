@@ -49,7 +49,7 @@ public:
 	/// groups prime implicants, is iterated upon by start();
 	/// </summary>
 	/// <returns>vector of coveredBool type</returns>
-	std::vector<std::vector<coveredBool>> group_primes(std::vector<std::vector<coveredBool>> mintermGroups);
+	std::vector<std::vector<coveredBool>> group_primes(std::vector<std::vector<coveredBool>>& mintermGroups);
 
 	/// <summary>
 	/// combines minterms together, is used in group_primes();

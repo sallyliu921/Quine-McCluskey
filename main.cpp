@@ -4,9 +4,8 @@
 
 int main()
 {
-    std::set<char> uniqueLiterals = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H','I', 'J' };
 
-    std::vector<std::string> s = {"ABCD", "A'BCD'", "AB'CD'" , "ABC'D"};
+    std::vector<std::string> s = {"ABCDE", "A'BCD'E", "AB'CD'E'" , "ABC'DE", "A'B'C'D'E'", "A'B'CDE"};
     quineMcCluskey qm(&s);
 
     qm.start();

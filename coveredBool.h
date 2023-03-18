@@ -18,7 +18,7 @@ typedef struct coveredBool
 {
 	int value;
 	int coverIndexes; //each bit acts as a flag for its corresponding dashed (covered) bit in value
-	bool isCovered; //flag to check if coveredBool is combined (might remove for redundancy as any uncombined implicants will be pushed into a container)
+	bool isCombined; //flag to check if coveredBool is combined 
 
 
 	static std::string* coveredBool_to_binary(coveredBool a, int bits)

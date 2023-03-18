@@ -27,7 +27,7 @@
     <ClCompile Include="quineMcCluskey.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CoverChart.cpp">
+    <ClCompile Include="coverChart.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

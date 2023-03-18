@@ -165,7 +165,10 @@ std::vector<std::vector<coveredBool>> quineMcCluskey::group_minterms_by_bits()
 
 coveredBool	quineMcCluskey::combine_minterms(coveredBool A, coveredBool B)
 {
-	coveredBool combinedMinterm = A;
+	coveredBool combinedMinterm;
+	combinedMinterm.value = A.value;
+	combinedMinterm.coverIndexes = A.coverIndexes;
+	combinedMinterm.isCombined = 0;
 
 	for (int i = 0; i < 32; i++) //looping over 32 bit int, i represents number of bits we shift
 	{
@@ -180,15 +183,15 @@ coveredBool	quineMcCluskey::combine_minterms(coveredBool A, coveredBool B)
 	return combinedMinterm;
 }
 
-std::vector<std::vector<coveredBool>> quineMcCluskey::group_primes(std::vector<std::vector<coveredBool>> mintermGroups)
+std::vector<std::vector<coveredBool>> quineMcCluskey::group_primes(std::vector<std::vector<coveredBool>>& mintermGroups)
 {
 	std::vector<std::vector<coveredBool>> primeImplicants(_uniqueLiterals->size());
 
-	for (int i = 0; i < mintermGroups.size() - 1; i++)
+	for (int i = 0; i < mintermGroups.size() - 1; i++) //columns
 	{
-		for (int j = 0; j < mintermGroups[i].size(); j++)
+		for (int j = 0; j < mintermGroups[i].size(); j++) //minterms of a group
 		{
-			for (int k = 0; k < mintermGroups[i + 1].size(); k++)
+			for (int k = 0; k < mintermGroups[i + 1].size(); k++) //minterms of the group adjacent to it
 			{
 				int difference = coveredBool_bit_difference(mintermGroups[i][j], mintermGroups[i + 1][k]);
 
@@ -212,8 +215,9 @@ std::vector<std::vector<coveredBool>> quineMcCluskey::group_primes(std::vector<s
 						primeImplicants[i].push_back(combinedMinterm);
 					}
 
-					mintermGroups[i][j].isCovered = true;
-					mintermGroups[i + 1][k].isCovered = true;
+					mintermGroups[i][j].isCombined = true;
+					mintermGroups[i + 1][k].isCombined = true;
+
 				}
 			}
 		}
@@ -350,7 +354,7 @@ void quineMcCluskey::start()
 		{
 			for (auto k : j) //minterms
 			{
-				if (!k.isCovered)
+				if (!k.isCombined)
 				{
 					std::cout << *coveredBool::coveredBool_to_binary(k, _uniqueLiterals->size()) << "\n";
 					std::cout << *coveredBool_to_minterm(k) << "\n\n";
