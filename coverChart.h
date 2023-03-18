@@ -20,9 +20,10 @@ public:
 
 	void set_primeImplicants(std::vector<coveredBool> coveredBools);
 	void build_chart(int bits); //iterates on pis, bitmasks them and builds the map
-	std::vector<int> get_essential_primes();
+	std::vector<coveredBool> get_essential_primes();
 
-	void reduce_chart();
+	bool reduce_chart(int bits);
+	void remove_chart_redundancy(int bits); //removes dominating columns,then dominated rows if present
 	void print_chart(int bits);
 };
 

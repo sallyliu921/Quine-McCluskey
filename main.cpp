@@ -5,7 +5,7 @@
 int main()
 {
 
-    std::vector<std::string> s = {"ABCDE", "A'BCD'E", "AB'CD'E'" , "ABC'DE", "A'B'C'D'E'", "A'B'CDE"};
+    std::vector<std::string> s = {"ABCD", "A'BCD", "A'B'CD", "A'B'C'D", "A'B'C'D'", "AB'C'D'", "ABC'D'", "ABCD'"};
     quineMcCluskey qm(&s);
 
     qm.start();
