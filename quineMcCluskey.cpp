@@ -370,21 +370,7 @@ void quineMcCluskey::start()
 	_coverChart.build_chart(_uniqueLiterals->size());
 	_coverChart.print_chart(_uniqueLiterals->size());
 
-	std::cout << "Essential Primes: \n\n";
-	for (auto i : _coverChart.get_essential_primes())
-	{
-		std::cout << *coveredBool::coveredBool_to_binary(i, _uniqueLiterals->size()) << "\n" << *coveredBool_to_minterm(i) << "\n\n";
-	}
+	_coverChart.three_step_heuristic(_uniqueLiterals->size());
 
-	if (!_coverChart.reduce_chart(_uniqueLiterals->size()))
-	{
-		std::cout << "Reduced coverChart: \n\n";
-		_coverChart.remove_chart_redundancy(_uniqueLiterals->size());
-		_coverChart.print_chart(_uniqueLiterals->size());
-	}
-	else
-	{
-		std::cout << "Cover Chart is in its Simplest Form\n";
-	}
 }
 

@@ -33,7 +33,7 @@ void coverChart::build_chart(int bits)
 	}
 }
 
-std::vector<coveredBool> coverChart::get_essential_primes()
+std::vector<coveredBool> coverChart::get_essential_primes() //redesign
 {
 	std::vector<coveredBool> temp;
 	int count = 0;
@@ -49,7 +49,7 @@ std::vector<coveredBool> coverChart::get_essential_primes()
 	return temp;
 }
 
-bool coverChart::reduce_chart(int bits)
+bool coverChart::reduce_chart(int bits) //redesign
 {
 	auto temp = _chart;
 	int count = 0;
@@ -68,11 +68,11 @@ bool coverChart::reduce_chart(int bits)
 	return _chart == temp;
 }
 
-void coverChart::remove_chart_redundancy(int bits)
+bool coverChart::remove_chart_redundancy(int bits) //redesign
 {
 	bool temp = false;
 
-	for (auto i : _chart)
+	for (auto i : _chart) //iterations to check if there is a dominating column to remove
 	{
 		for (auto j : _chart)
 		{
@@ -87,26 +87,29 @@ void coverChart::remove_chart_redundancy(int bits)
 		temp = false;
 	}
 
-	int row = 0;
-	int comparisonRow = 0;
+	return _chart == _chart;
+}
 
-	for (int i = 0; i < bits-1; i++)
+bool coverChart::three_step_heuristic(int bits)
+{
+	bool temp = 0;
+
+begin:
+
+	if (reduce_chart(bits))
 	{
-		for (int j = 0; j < _chart.size(); j++)
+
+		if (remove_chart_redundancy(bits))
 		{
-			row |= (_chart[i] & j) << j;
-			comparisonRow |= (_chart[i%j] & j) << j;
-
-			if (row & comparisonRow)
-			{
-				for (int k = 0; k < bits; k++)
-				{
-					_chart[k] &= 0 << k; //clears bits in row
-				}
-			}
-
+			print_chart(bits);
+			return temp; //returns 0 if its not simplified (no change to chart)
 		}
+		temp = 1;
+
+		goto begin; //if redundancy is resolved repeat the 3 step heuristic again
 	}
+
+
 }
 
 void coverChart::print_chart(int bits)

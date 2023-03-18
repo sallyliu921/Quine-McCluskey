@@ -23,7 +23,8 @@ public:
 	std::vector<coveredBool> get_essential_primes();
 
 	bool reduce_chart(int bits);
-	void remove_chart_redundancy(int bits); //removes dominating columns,then dominated rows if present
+	bool remove_chart_redundancy(int bits); //removes dominating columns,then dominated rows if present
+	bool three_step_heuristic(int bits);
 	void print_chart(int bits);
 };
 
