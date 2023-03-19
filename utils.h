@@ -16,7 +16,7 @@
 #include <vector>
 #include <stdio.h>
 #include <bitset>
-
+#include <cmath>
 #include "coveredBool.h"
 
 /// <summary>
