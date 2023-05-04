@@ -309,81 +309,6 @@ std::vector<std::string> quineMcCluskey::get_pos()
 void quineMcCluskey::start()
 {
 
-start:
-	std::cout << "Enter '1' to use a test case or '2' to input your own function: ";
-	int option;
-	std::cin >> option;
-
-	if (option == 1) {
-		std::vector<std::string> testFunctions = {
-			"A'BC + AB + ABCD'",
-			"A'B + AB + ABCD'",
-			"A'BC + A'BCD + AB'C + ABCD",
-			"A'B' + AB' + ABCD'",
-			"A'B'C' + A'BCD' + ABCD'",
-			"A'BCD' + ABCD",
-			"A'BCD' + ABC'D + A'BC'D + ABCD",
-			"AB' + A'BCD' + A'BC'",
-			"A'B'C' + A'BCD' + ABCD'",
-			"A'BCD' + AB'C + ABCD"
-		};
-
-		std::cout << "Select a test function (1-10): ";
-		int testOption;
-		std::cin >> testOption;
-
-		if (testOption < 1 || testOption > 10) {
-			std::cout << "Invalid option. Please try again.\n";
-			goto start;
-		}
-
-		_function = new std::vector<std::string>();
-		std::istringstream iss(testFunctions[testOption - 1]);
-		std::string token;
-		while (std::getline(iss, token, '+'))
-		{
-			_function->push_back(token);
-		}
-
-		int numVariables = 4; // default to 4 variables for test cases
-		_uniqueLiterals = new std::set<char>();
-		for (int i = 0; i < numVariables; i++)
-		{
-			char literal = 'A' + i;
-			_uniqueLiterals->insert(literal);
-		}
-
-	}
-	else if (option == 2) {
-		std::cout << "Enter the function in sum of products form: ";
-		std::string function;
-		std::cin >> function;
-		utils myUtils;
-
-		_function = new std::vector<std::string>();
-		std::istringstream iss(function);
-		std::string token;
-		while (std::getline(iss, token, '+'))
-		{
-			_function->push_back(token);
-		}
-
-		std::cout << "Enter the number of variables used in the function: ";
-		int numVariables;
-		std::cin >> numVariables;
-
-		_uniqueLiterals = new std::set<char>();
-		for (int i = 0; i < numVariables; i++)
-		{
-			char literal = 'A' + i;
-			_uniqueLiterals->insert(literal);
-		}
-	}
-	else {
-		std::cout << "Invalid option. Please try again.\n";
-		goto start;
-	}
-
 	std::vector<std::vector<std::vector<coveredBool>>> columnArray;
 	columnArray.push_back(group_minterms_by_bits());
 
@@ -424,7 +349,7 @@ start:
 	std::cout << "Prime Implicants: \n";
 	std::vector<coveredBool> primeImplicants; //container to store PIs to set coverChart's PIs
 
-	for (int i = 0; i < _uniqueLiterals->size() - 1; i++) //cols
+	for (int i = 0; i < _uniqueLiterals->size(); i++) //cols
 	{
 		for (auto j : columnArray[i]) //groups
 		{
