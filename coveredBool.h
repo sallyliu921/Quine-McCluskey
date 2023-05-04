@@ -22,13 +22,14 @@ typedef struct coveredBool
 
 	bool operator<(const coveredBool& rhs) const noexcept
 	{
-		return this->value < rhs.value; 
+		return this->value < rhs.value && this->coverIndexes < rhs.coverIndexes;
 	}
 
-	bool operator!=(const coveredBool& rhs) const noexcept
+	bool operator==(const coveredBool& rhs) const noexcept
 	{
-		return this->coverIndexes != rhs.coverIndexes && this->value != rhs.value;
+		return this->coverIndexes == rhs.coverIndexes && this->value == rhs.value;
 	}
+
 
 	static std::string* coveredBool_to_binary(coveredBool a, int bits)
 	{

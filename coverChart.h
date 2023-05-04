@@ -16,7 +16,7 @@ private:
 
 
 public:
-	std::set<coveredBool> _essentialPrimes;
+	std::vector<coveredBool> _essentialPrimes;
 	coverChart();
 	coverChart(std::vector<coveredBool> coveredBools, std::map<int,int> chart);
 

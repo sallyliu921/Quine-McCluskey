@@ -37,14 +37,35 @@ void coverChart::build_chart(int bits)
 
 void coverChart::reduce_from_essential_primes(int bits)
 {
+	std::vector<int> zeroVec(_primeImplicants.size(), 0);
+	std::set<int> RowIndexesToDelete;
+
 	for (int i = 0; i < _chart.size(); i++)
 	{
 		int temp = std::count(_chart[i].begin(), _chart[i].end(), 1);
+		int rowIndex = std::find(_chart[i].begin(), _chart[i].end(), 1) - _chart[i].begin();
 		if (temp == 1) 
 		{
-			//_essentialPrimes.insert(_primeImplicants[std::find(_chart[i].begin(), _chart[i].end(), 1) - _chart[i].begin()]);
-			_chart[i][std::find(_chart[i].begin(), _chart[i].end(), 1) - _chart[i].begin()] = 0;
+			bool isNotUnique = std::find(_essentialPrimes.begin(), _essentialPrimes.end(), _primeImplicants[rowIndex]) != _essentialPrimes.end();
+			if (!isNotUnique)
+			{
+				_essentialPrimes.push_back(_primeImplicants[rowIndex]);
+			}
+
+			RowIndexesToDelete.insert(rowIndex);
 		}
+	}
+
+	for (int i = 0; i < _chart.size(); i++)
+	{
+		print_chart(bits);
+		_chart[i] = zeroVec;
+		for (auto j : RowIndexesToDelete)
+		{
+
+			_chart[i][j] = 0;
+		}
+		
 	}
 }
 
@@ -57,7 +78,7 @@ begin:
 	int maxIndex = 0;
 	int tempIndex = 0;
 	auto temp = _chart;
-	bool isUnique = false;
+	bool isFound = true;
 
 	for(int i = 0; i < _primeImplicants.size(); i++)
 	{
@@ -67,7 +88,6 @@ begin:
 			{
 				if (std::count(_chart[k].begin(), _chart[k].end(), 1) == 1)
 				{
-					print_chart(bits);
 					goto mid;
 				}
 			}
@@ -86,28 +106,29 @@ begin:
 		rowBitCount = 0;
 
 	}
-	_essentialPrimes.insert(_primeImplicants[maxIndex]);
-	isUnique = _essentialPrimes.find(_primeImplicants[maxIndex]) != _essentialPrimes.end();
+
+	isFound = std::find(_essentialPrimes.begin(), _essentialPrimes.end(), _primeImplicants[maxIndex]) != _essentialPrimes.end();
+	if(!isFound)
+	{
+		_essentialPrimes.push_back(_primeImplicants[maxIndex]);
+	}
+		
 
 
 	clear_chart_row(maxIndex, bits); //clears rows
-	print_chart(bits);
 
-	if (isUnique)
-	{
-		print_chart(bits);
-		isUnique = false;
-	}
 
 
 mid:
-	reduce_from_essential_primes(bits);
-
 
 	if (temp != _chart)
 	{
 		goto begin;
 	}
+
+	reduce_from_essential_primes(bits);
+
+
 
 }
 
@@ -123,8 +144,7 @@ void coverChart::clear_chart_row(int index, int bits)
 void coverChart::print_chart(int bits)
 {
 
-
-	std::cout << std::right << std::setw(bits * 1.5 + 2) << " | ";
+	std::cout << std::right << std::setw(bits * 1.5 + 1) << " | ";
 
 	for (auto i : _chart)
 	{
@@ -157,5 +177,5 @@ void coverChart::print_chart(int bits)
 		std::cout << "\n";
 	}
 
-
+	std::cout << "\n";
 }
