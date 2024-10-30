@@ -10,9 +10,11 @@ start:
 	std::cout << "Enter '1' to use a test case or '2' to input your own function: ";
 	int option;
 	std::cin >> option;
+	
 
 	if (option == 1) {
 		std::vector<std::string> testFunctions = {
+			"a'b'c'+a'bc'+a'b'c+ab'c",
 			"A'B'C'+A'BC'+A'B'C+AB'C",
 			"A'B'C'+A'B'C+A'BC'+A'BC+AB'C'+ABC+ABC'",
 			"A'B'C'D'+A'BC'D'+A'BCD'+A'BC'D+A'BCD+ABC'D+ABCD",
